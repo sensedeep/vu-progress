@@ -1,0 +1,16 @@
+{
+    "name": "vu-progress",
+    "version": "1.0.0",
+    "main": "VuProgress.vue",
+    "repository": "https://github.com/sensedeep/vu-progress.git",
+    "licenses": [
+        {
+            "type": "GPL",
+            "url": "http://www.gnu.org/licenses/gpl-2.0.html"
+        },
+        {
+            "type": "Commercial",
+            "url": "https://www.sensedeep.com/licensing/"
+        }
+    ]
+}

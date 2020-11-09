@@ -1,3 +1,8 @@
+<!--
+    vu-progress -- Animated progress bar
+
+    Copyright (c) SenseDeep. All Rights Reserved.
+-->
 <template>
     <div class="progress-bar" :class="classes" :style="styling"></div>
 </template>
@@ -9,6 +14,7 @@ const Durations = {
     short:  3000,
     medium: 5000,
     long:  10000,
+    vlong:  30000,
 }
 const NapTime = 250
 
@@ -42,7 +48,7 @@ export default class Progress extends Vue {
                 duration = Durations.short
             }
         }
-        if (duration < NapTime || duration > 30000) {
+        if (duration < NapTime || duration > 9999999999) {
             duration = Durations.short
         }
         if (!this.active) {
@@ -69,11 +75,13 @@ export default class Progress extends Vue {
         await app.delay(NapTime)
         this.value = this.value + (100 / this.inc)
         this.update()
-        // this.styling = Object.assign({}, this.styling)
     }
 
     setWidth(width) {
         this.classes = this.classes.replace(' fade', '')
+        if (width > 100) {
+            width = 100
+        }
         if (width > 0) {
             this.styling.transition = 'width 1s linear 0s'
             this.styling.width = `${width}%`
@@ -82,7 +90,6 @@ export default class Progress extends Vue {
             this.styling.width = '0%'
         }
         this.$set(this.styling, 'width', this.styling.width)
-        //  MOB WHY?
         this.styling = Object.assign({}, this.styling)
     }
 
@@ -95,7 +102,7 @@ export default class Progress extends Vue {
     position: absolute;
     background: #2ebcfc;
     top: 48px;
-    left: 48px;
+    left: 0;
     height: 6px;
     padding: 0;
     margin: 0;
@@ -109,8 +116,7 @@ export default class Progress extends Vue {
     animation-fill-mode: forwards;
 }
 @keyframes progress-bar-fade {
-    0% { opacity: 1; box-shadow: 0 0 10px; }
-    50% { opacity: 0.5; }
+    0% { opacity: 0.75; }
     100% { opacity: 0; }
 }
 </style>

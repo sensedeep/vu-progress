@@ -20,8 +20,9 @@ const NapTime = 250
 
 @Component
 export default class Progress extends Vue {
-    styling = {}
+    repeat = false
     classes = ''
+    styling = {}
 
     constructor() {
         super()
@@ -42,7 +43,12 @@ export default class Progress extends Vue {
     }
 
     async start(duration) {
-        if (typeof duration != 'number') {
+        if (typeof duration == 'number') {
+            duration *= 1000
+        } else if (duration == 'repeat') {
+            duration = Durations.short
+            this.repeat = true
+        } else if (typeof duration != 'number') {
             duration = Durations[duration || 'short']
             if (!duration) {
                 duration = Durations.short
@@ -61,20 +67,25 @@ export default class Progress extends Vue {
     }
 
     stop() {
+        this.repeat = false
         this.value = 100
         this.classes += ' fade'
+        this.active = false
     }
 
     async update() {
-        this.setWidth(this.value)
-        if (!this.active || this.value >= 100) {
-            this.classes += ' fade'
-            this.active = false
-            return
-        }
-        await app.delay(NapTime)
-        this.value = this.value + (100 / this.inc)
-        this.update()
+        do {
+            while (this.active && this.value <= 100) {
+                this.setWidth(this.value)
+                await app.delay(NapTime)
+                this.value = this.value + (100 / this.inc)
+            }
+            await app.delay(NapTime)
+            this.value = 0
+            this.setWidth(0)
+        } while (this.repeat);
+        this.classes += ' fade'
+        this.active = false
     }
 
     setWidth(width) {
@@ -92,7 +103,6 @@ export default class Progress extends Vue {
         this.$set(this.styling, 'width', this.styling.width)
         this.styling = Object.assign({}, this.styling)
     }
-
 }
 </script>
 
